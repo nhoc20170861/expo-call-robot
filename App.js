@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import TabNavigation from "./src/components/TabNavigation/index.js";
-import { AuthProvider } from "./src/components/context/AuthContext/AuthContext.js";
+import TabNavigation from "./src/components/TabNavigation/TabNavigation";
+import { AuthProvider } from "./src/components/context/AuthContext";
 export default function App() {
   return (
     <View style={styles.container}>

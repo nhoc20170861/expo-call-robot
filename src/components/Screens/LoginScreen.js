@@ -9,10 +9,10 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useForm } from "react-hook-form";
-import CustomInput from "../CustomInput/CustomInput/CustomInput.js";
-import CustomButton from "../CustomButton/CustonButton/CustomButton.js";
-import { AuthContext } from "../context/AuthContext/AuthContext.js";
-
+import CustomInput from "../CustomInput/CustomInput";
+import CustomButton from "../CustomButton/CustonButton";
+import { AuthContext } from "../context/AuthContext";
+//import logo from "../../../assets/phenikaa-x.png";
 export default function LoginScreen() {
   const { login } = useContext(AuthContext);
   const { height } = useWindowDimensions();
@@ -93,11 +93,11 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.root}>
-      <Image
+      {/* <Image
         style={([styles.logo], { height: height * 0.12 })}
-        source={require("../../../assets/phenikaa-x.png")}
+        source={logo}
         resizeMode="contain"
-      />
+      /> */}
       <CustomInput
         name="username"
         placeholder="Username"

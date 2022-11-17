@@ -10,9 +10,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { View } from "react-native";
-import { AuthContext } from "../context/AuthContext/AuthContext.js";
+import { AuthContext } from "../context/AuthContext";
 import { ActivityIndicator } from "react-native-paper";
-import CustomButton from "../CustomButton/CustonButton/CustomButton.js";
+import CustomButton from "../CustomButton/CustonButton";
 // Reactnavigation Bottom Tab
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 const Tab = createMaterialBottomTabNavigator();
@@ -59,7 +59,7 @@ function MyTabs() {
             size = focused ? 25 : 20;
             color = focused ? "#f0f" : "#555";
           }
-          //return <FontAwesome5 name={iconName} size={size} color={color} />;
+          return <FontAwesome5 name={iconName} size={size} color={color} />;
         },
       })}
     >

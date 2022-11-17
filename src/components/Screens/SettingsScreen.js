@@ -1,7 +1,7 @@
 import { View, Text, TextInput, Button } from "react-native";
 import React, { useState } from "react";
 import styles from "./style";
-import CustomAlert from "../CustomAlert/CustomAlert/CustomAlert.js";
+import CustomAlert from "../CustomAlert/CustomAlert";
 
 function SettingsScreen() {
   const [name, SetName] = useState("");
