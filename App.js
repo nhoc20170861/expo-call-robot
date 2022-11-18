@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import TabNavigation from "./src/components/TabNavigation/TabNavigation";
 import { AuthProvider } from "./src/components/context/AuthContext";

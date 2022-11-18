@@ -3,8 +3,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoading, SetisLoading] = useState(false);
+  const [isLoading, SetisLoading] = useState(true);
   const [userToken, SetuserToken] = useState(null);
+  const [RobotList, setRobotList] = useState([]);
+
   const login = () => {
     console.log("login success!");
     let token = "quanpa2508";
@@ -17,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     console.log("process logout ");
     SetuserToken(null);
     AsyncStorage.removeItem("userToken");
+    AsyncStorage.removeItem("StationPram");
     SetisLoading(false);
   };
 
@@ -34,7 +37,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
   return (
     <AuthContext.Provider
-      value={{ login, logout, isLoggedIn, isLoading, userToken }}
+      value={{
+        login,
+        logout,
+        RobotList,
+        isLoggedIn,
+        isLoading,
+        userToken,
+        setRobotList,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,35 +1,57 @@
-import { View, Text, TextInput, Button } from "react-native";
+import { View, Text, ToastAndroid } from "react-native";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import styles from "./style";
 import CustomAlert from "../CustomAlert/CustomAlert";
-
+import CustomInput from "../CustomInput/CustomInput";
+import CustomButton from "../CustomButton/CustonButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 function SettingsScreen() {
-  const [name, SetName] = useState("");
-  const [submitted, SetSubmitted] = useState(false);
   const [customAlert, SetcustomAlert] = useState(false);
-  const onPressHandler = () => {
-    if (name.length > 3) {
-      SetSubmitted(true);
-      //SetcustomAlert(false);
-    } else {
-      // Alert
-      //   Alert.alert(
-      //     'Warning',
-      //     'The name must be longer than 3 characters',
-      //     [
-      //       {
-      //         text: 'OK',
-      //         onPress: () => console.warn('OK Pressed!'),
-      //       },
-      //     ],
-      //     {
-      //       cancelable: true,
-      //       onDismiss: () => console.warn('Alert dismissed!'),
-      //     },
-      //   );
-      // }
-      SetSubmitted(false);
-      SetcustomAlert(true);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    // defaultValues: {
+    //   username: "Robotics",
+    //   password: "robotics",
+    // },
+  });
+
+  const onPressHandler = (data) => {
+    try {
+      console.log(data);
+      AsyncStorage.getItem("StationPram").then(async (value) => {
+        if (value != null) {
+          const StationPram = JSON.parse(value);
+          console.log(StationPram);
+          if (
+            StationPram.StationName !== data.StationName ||
+            StationPram.LineName !== data.LineName
+          ) {
+            try {
+              StationPram.StationName = data.StationName;
+              StationPram.LineName = data.LineName;
+              await AsyncStorage.setItem(
+                "StationPram",
+                JSON.stringify(StationPram)
+              );
+              ToastAndroid.showWithGravityAndOffset(
+                "Set pram sucessed!",
+                ToastAndroid.SHORT,
+                ToastAndroid.TOP,
+                0,
+                100
+              );
+            } catch (error) {
+              console.log("Set station pram error: ", error);
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -40,24 +62,37 @@ function SettingsScreen() {
           SetcustomAlert={() => SetcustomAlert(false)}
         />
       ) : null}
-      <Text style={styles.text}>Please write your name</Text>
-      <TextInput
-        value={name}
-        style={styles.textInput}
-        placeholder="e.g: Pham Anh Quan"
-        onChangeText={(value) => SetName(value)}
-      />
-      <View style={styles.flexItem1}>
-        <Button title="Submit" onPress={onPressHandler} />
-        <Button
-          title="Clear"
-          onPress={() => {
-            SetName("");
-            SetSubmitted(false);
-          }}
+      <Text style={styles.header}>Set Pramater</Text>
+      <View
+        style={{
+          width: "100%",
+          padding: 20,
+        }}
+      >
+        <Text style={styles.text}>StationName</Text>
+        <CustomInput
+          name="SationName"
+          placeholder="station-1"
+          rules={{ required: "StationName is required" }}
+          control={control}
+          secureTextEntry={false}
+        />
+        <Text style={styles.text}>LineName</Text>
+        <CustomInput
+          name="LineName"
+          placeholder="station-7"
+          rules={{ required: "LineName is required" }}
+          control={control}
+          secureTextEntry={false}
         />
       </View>
-      {submitted ? <Text style={styles.text}>Your name is: {name}</Text> : null}
+
+      <View style={styles.flexItem1}>
+        <CustomButton
+          title="Submit"
+          onPress={handleSubmit(onPressHandler)}
+        ></CustomButton>
+      </View>
     </View>
   );
 }

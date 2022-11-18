@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "appcallrobot",
+    "name": "Call Robot",
     "slug": "appcallrobot",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/todoist-logo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/todoist-logo.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.nhoc20170861.appcallrobot"

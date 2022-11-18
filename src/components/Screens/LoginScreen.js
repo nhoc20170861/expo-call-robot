@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import CustomInput from "../CustomInput/CustomInput";
 import CustomButton from "../CustomButton/CustonButton";
 import { AuthContext } from "../context/AuthContext";
-//import logo from "../../../assets/phenikaa-x.png";
+import logo from "../../../assets/react-native.png";
 export default function LoginScreen() {
   const { login } = useContext(AuthContext);
   const { height } = useWindowDimensions();
@@ -22,20 +22,25 @@ export default function LoginScreen() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      username: "Robotics",
-      password: "robotics",
-    },
+    // defaultValues: {
+    //   username: "Robotics",
+    //   password: "robotics",
+    // },
   });
 
   // store userdata
   (async () => {
     try {
-      var user = {
+      const UserData = {
         Username: "Robotics",
         Password: "robotics",
       };
-      await AsyncStorage.setItem("UserData", JSON.stringify(user));
+      const StationPram = {
+        StationName: "station-1",
+        LineName: "station-7",
+      };
+      await AsyncStorage.setItem("UserData", JSON.stringify(UserData));
+      await AsyncStorage.setItem("StationPram", JSON.stringify(StationPram));
     } catch (error) {
       console.log(error);
     }
@@ -93,11 +98,11 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.root}>
-      {/* <Image
-        style={([styles.logo], { height: height * 0.12 })}
+      <Image
+        style={([styles.logo], { height: height * 0.15 })}
         source={logo}
         resizeMode="contain"
-      /> */}
+      ></Image>
       <CustomInput
         name="username"
         placeholder="Username"
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#202020",
   },
   logo: {
     width: "100%",
