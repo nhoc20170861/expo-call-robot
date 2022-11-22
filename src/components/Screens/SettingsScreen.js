@@ -1,67 +1,47 @@
 import { View, Text, ToastAndroid } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./style";
-import CustomAlert from "../CustomAlert/CustomAlert";
+import { AuthContext } from "../context/AuthContext";
 import CustomInput from "../CustomInput/CustomInput";
 import CustomButton from "../CustomButton/CustonButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 function SettingsScreen() {
-  const [customAlert, SetcustomAlert] = useState(false);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    // defaultValues: {
-    //   username: "Robotics",
-    //   password: "robotics",
-    // },
   });
+  const { stationPram, updateStationPram } = useContext(AuthContext);
 
-  const onPressHandler = (data) => {
-    try {
-      console.log(data);
-      AsyncStorage.getItem("StationPram").then(async (value) => {
-        if (value != null) {
-          const StationPram = JSON.parse(value);
-          console.log(StationPram);
-          if (
-            StationPram.StationName !== data.StationName ||
-            StationPram.LineName !== data.LineName
-          ) {
-            try {
-              StationPram.StationName = data.StationName;
-              StationPram.LineName = data.LineName;
-              await AsyncStorage.setItem(
-                "StationPram",
-                JSON.stringify(StationPram)
-              );
-              ToastAndroid.showWithGravityAndOffset(
-                "Set pram sucessed!",
-                ToastAndroid.SHORT,
-                ToastAndroid.TOP,
-                0,
-                100
-              );
-            } catch (error) {
-              console.log("Set station pram error: ", error);
-            }
-          }
-        }
-      });
-    } catch (error) {
-      console.log(error);
+  const onPressHandler = async (data) => {
+
+    const result = await updateStationPram(data);
+    console.log(result);
+    if (result == "Successed") {
+      ToastAndroid.showWithGravityAndOffset(
+        "Set pram successed!",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        100
+      );
+    }
+
+    else {
+      ToastAndroid.showWithGravityAndOffset(
+        "Set pram fail!",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        0,
+        100
+      );
+
     }
   };
   return (
     <View style={styles.body}>
-      {customAlert ? (
-        <CustomAlert
-          customAlert={customAlert}
-          SetcustomAlert={() => SetcustomAlert(false)}
-        />
-      ) : null}
       <Text style={styles.header}>Set Pramater</Text>
       <View
         style={{
@@ -71,8 +51,8 @@ function SettingsScreen() {
       >
         <Text style={styles.text}>StationName</Text>
         <CustomInput
-          name="SationName"
-          placeholder="station-1"
+          name="StationName"
+          placeholder={stationPram["StationName"]}
           rules={{ required: "StationName is required" }}
           control={control}
           secureTextEntry={false}
@@ -80,7 +60,7 @@ function SettingsScreen() {
         <Text style={styles.text}>LineName</Text>
         <CustomInput
           name="LineName"
-          placeholder="station-7"
+          placeholder={stationPram["LineName"]}
           rules={{ required: "LineName is required" }}
           control={control}
           secureTextEntry={false}

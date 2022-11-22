@@ -1,5 +1,5 @@
-import {View, Text, Modal, Pressable} from 'react-native';
-import React, {useState} from 'react';
+import { View, Text, Modal, Pressable } from 'react-native';
+import React, { useState } from 'react';
 import styles from './style';
 
 const CustomAlert = props => {
@@ -19,10 +19,10 @@ const CustomAlert = props => {
       <View style={styles.centered_view}>
         <View style={styles.warning_modal}>
           <View style={styles.warning_title}>
-            <Text style={styles.text}>Warning</Text>
+            <Text style={styles.text}>Notify</Text>
           </View>
           <View style={styles.warning_body}>
-            <Text style={styles.text}>Warning</Text>
+            <Text style={styles.text}>{props.message}</Text>
           </View>
           <Pressable
             onPress={() => {
@@ -30,7 +30,7 @@ const CustomAlert = props => {
               props.SetcustomAlert();
             }}
             style={styles.warning_button}
-            android_ripple={{color: '#fff'}}>
+            android_ripple={{ color: '#fff' }}>
             <Text style={styles.text}> OK</Text>
           </Pressable>
         </View>

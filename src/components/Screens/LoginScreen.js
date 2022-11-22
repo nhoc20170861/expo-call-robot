@@ -35,12 +35,8 @@ export default function LoginScreen() {
         Username: "Robotics",
         Password: "robotics",
       };
-      const StationPram = {
-        StationName: "station-1",
-        LineName: "station-7",
-      };
-      await AsyncStorage.setItem("UserData", JSON.stringify(UserData));
-      await AsyncStorage.setItem("StationPram", JSON.stringify(StationPram));
+
+      await AsyncStorage.setItem("userData", JSON.stringify(UserData));
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +45,7 @@ export default function LoginScreen() {
   const checkLoginInfo = (data) => {
     try {
       console.log(data);
-      AsyncStorage.getItem("UserData").then((value) => {
+      AsyncStorage.getItem("userData").then((value) => {
         if (value != null) {
           const Info = JSON.parse(value);
 
