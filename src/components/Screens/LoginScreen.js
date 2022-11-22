@@ -75,22 +75,7 @@ export default function LoginScreen() {
     }
   };
 
-  // const setData = async () => {
-  //   if (username.length == 0 || password.length == 0) {
-  //     Alert.alert("Warning!", "Please write your data.");
-  //   } else {
-  //     try {
-  //       var user = {
-  //         Username: "Robotics",
-  //         Password: "robotics",
-  //       };
-  //       await AsyncStorage.setItem("UserData", JSON.stringify(user));
-  //       navigation.navigate("Home");
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
+
 
   return (
     <View style={styles.root}>

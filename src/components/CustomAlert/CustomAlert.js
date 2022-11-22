@@ -5,7 +5,7 @@ import styles from './style';
 const CustomAlert = props => {
   // trigger on component mount
   const [showWarning, SetshowWarning] = useState(true);
-  console.log(props);
+  // console.log(props);
   return (
     <Modal
       visible={showWarning}

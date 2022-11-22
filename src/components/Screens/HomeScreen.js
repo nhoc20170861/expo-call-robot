@@ -2,12 +2,16 @@ import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useForm } from "react-hook-form";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import styles from "./style";
 import CustomButton from "../CustomButton/CustonButton";
 import RobotModel from "../RobotModel/RobotModel";
 import CustomAlert from "../CustomAlert/CustomAlert";
+
+import CustomInput from "../CustomInput/CustomInput"
+
 const HomeStack = createNativeStackNavigator();
 
 function RobotList({ navigation }) {
@@ -73,19 +77,50 @@ function RobotList({ navigation }) {
 
 
 function RobotInfo({ route }) {
-  const { stationPram, isLoading, SetisLoading } = useContext(AuthContext);
-
-  useEffect(() => {
-    stationPram;
-  });
+  const { stationPram } = useContext(AuthContext);
+  const [isGetInfoRobot, SetisGetInfoRobot] = useState(true);
   const { robotId, robotName } = route.params;
 
-  console.log(route.params);
+  // console.log(route.params);
   const [taskNavigationTo, SettaskNavigationTo] = useState(false);
   const [taskNavigationLine, SettaskNavigationLine] = useState(false);
   const [robotConnection, SetrobotConnecttion] = useState(0);
 
   const [customAlert, SetcustomAlert] = useState(false);
+  const [callApi, SetcallApi] = useState('CallRobot');
+
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+  });
+
+  const onCancelTask = async (data) => {
+    console.log(data);
+    const url = "http://172.20.2.50:8080/api/Remote/Robot/" + robotId + "/Task/" + data["TaskName"];
+
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE'
+      });
+      const result = await response.json();
+      console.log(result);
+      if (!result["isError"]) {
+        SetcustomAlert(true);
+        SetcallApi('CancelTask');
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    stationPram;
+  });
+
 
   const getTask = async (robotId, taskName) => {
     const url = "http://172.20.2.50:8080/api/Remote/Robot/" + robotId + "/Task/" + taskName;
@@ -102,24 +137,27 @@ function RobotInfo({ route }) {
       });
   };
   setInterval(async () => {
-    const result1 = await getTask(robotId, "NavigationTo");
-    const result2 = await getTask(robotId, "NavigationLine");
-    if (result1 === 2) {
-      SettaskNavigationTo(true); // robot is running task NavigationTo
+    if (robotConnection === 3) {
+      const result1 = await getTask(robotId, "NavigationTo");
+      const result2 = await getTask(robotId, "NavigationLine");
+      if (result1 === 2) {
+        SettaskNavigationTo(true); // robot is running task NavigationTo
+      }
+      else {
+        SettaskNavigationTo(false);
+      }
+      if (result2 === 2) {
+        SettaskNavigationLine(true); // robot is running task NavigationTo
+      } else {
+        SettaskNavigationLine(false);
+      }
     }
-    else {
-      SettaskNavigationTo(false);
-    }
-    if (result2 === 2) {
-      SettaskNavigationLine(true); // robot is running task NavigationTo
-    } else {
-      SettaskNavigationLine(false);
-    }
+
 
   }, 2000);
 
   const getState = async () => {
-    SetisLoading(true);
+
     const url = "http://172.20.2.50:8080/api/Remote/Robot/" + robotId + "/State/StatusAGV";
 
     try {
@@ -134,22 +172,29 @@ function RobotInfo({ route }) {
         SetrobotConnecttion(2);
       }
       else {
-        SetrobotConnecttion(0);
+        SetrobotConnecttion(3);
+        const result1 = await getTask(robotId, "NavigationTo");
+        const result2 = await getTask(robotId, "NavigationLine");
+        if (result1 === 2) {
+          SettaskNavigationTo(true); // robot is running task NavigationTo
+        }
+        else {
+          SettaskNavigationTo(false);
+        }
+        if (result2 === 2) {
+          SettaskNavigationLine(true); // robot is running task NavigationTo
+        } else {
+          SettaskNavigationLine(false);
+        }
       }
     } catch (error) {
       console.error(error);
     } finally {
-      // SetisLoading(false);
+      SetisGetInfoRobot(false);
     }
-    // return fetch(url, {
 
-    // }).then((response) => response.json())
-    //   .then((json) => {
-    //     return json;
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+
+
   };
 
   const goToStation = async (robotId, taskName, pointName) => {
@@ -170,6 +215,7 @@ function RobotInfo({ route }) {
       console.log(data);
       if (!data["isError"]) {
         SetcustomAlert(true);
+        SetcallApi('CallRobot');
       }
     } catch (error) {
       console.error("Error", error);
@@ -196,6 +242,7 @@ function RobotInfo({ route }) {
       console.log(data);
       if (!data["isError"]) {
         SetcustomAlert(true);
+        SetcallApi('CallRobot');
       }
     } catch (error) {
       console.error("Error", error);
@@ -204,12 +251,13 @@ function RobotInfo({ route }) {
   };
 
   useEffect(() => {
+
     getState();
   }, []);
 
 
 
-  if (isLoading) {
+  if (isGetInfoRobot) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fff" }}>
         <ActivityIndicator size={"large"} />
@@ -218,16 +266,16 @@ function RobotInfo({ route }) {
   }
   return (
 
-    <View style={styles.body}>
+    <View style={styles.bodyRobotInfo}>
       {customAlert ? (
         <CustomAlert
           // customAlert={customAlert}
-          message="Call robot sucessed"
+          message={(callApi === 'CallRobot') ? "Call robot successed" : "Cancel Task successed"}
           SetcustomAlert={() => SetcustomAlert(false)}
         />
       ) : null}
       <Text style={styles.header}>{robotName}</Text>
-      {robotConnection === 0 ? (
+      {robotConnection === 3 ? (
         <>
           <View style={styles.flexItem1}>
             <CustomButton
@@ -249,9 +297,29 @@ function RobotInfo({ route }) {
           </View>
           <View style={styles.flexItem3}>
             <Text style={{ color: "red" }}>
-              Waiting robot finish task {taskNavigationTo ? ('NavigationTo') : ("NavigationLine")} before call robot again
+              {
+                taskNavigationTo ? 'Waiting robot finish task NavigationTo before call robot again' :
+                  (taskNavigationLine) ? 'Waiting robot finish task NavigationLine before call robot again' : 'Robot free'
+              }
+
             </Text>
           </View>
+
+          <View style={styles.flexItem4}>
+            <CustomInput
+              name="TaskName"
+              placeholder="task will be deleted"
+              rules={{ required: "Taskname is required" }}
+              control={control}
+              secureTextEntry={false}
+            />
+            <CustomButton
+              title="Cancel Task"
+              color='red'
+              onPress={handleSubmit(onCancelTask)}
+            ></CustomButton>
+          </View>
+
 
         </>
       ) : (<Text style={{ color: "red", margin: 10 }}>

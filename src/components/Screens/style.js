@@ -6,7 +6,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     alignItems: "center",
     // justifyContent: "center",
-    paddingTop: 50,
+    paddingTop: 40,
+  },
+  bodyRobotInfo: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    // justifyContent: "center",
+    paddingTop: 5,
   },
   text: {
     color: "#000000",
@@ -39,6 +47,18 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   flexItem3: {
+    margin: 10,
+    width: 250,
+    padding: 5,
+    display: "flex",
+    alignItems: "center",
+    borderColor: "#C0C0C0",
+    borderWidth: 2,
+    borderRadius: 5,
+    backgroundColor: '#00FFFF',
+
+  },
+  flexItem4: {
     margin: 10,
     width: 250,
     padding: 10,
